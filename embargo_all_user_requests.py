@@ -27,7 +27,7 @@ while next_ is not None:
         for request in json_data['results']:
             reqNumber = request["id"]
             editedRequest = requests.get(url + 'foia/%s/' % str(reqNumber), headers=headers)
-            print "Embargoing request number " + str(reqNumber) + " for " + request["title"] + " filed by " + request["user"]
+            print "Embargoing request number " + str(reqNumber) + " for " + request["title"] + " filed by " + request["username"]
 
             data = json.dumps({
                'embargo': True,
