@@ -6,7 +6,7 @@ import unicodecsv
 token = ''
 url = 'https://www.muckrock.com/api_v1/'
 
-headers = {'Authorization': 'Token %s' % token}
+headers = {'Authorization': 'Token %s' % token, 'content-type': 'application/json'}
 next_ = url + 'foia'
 
 fields = ('id', 'user', 'title', 'slug', 'status', 'jurisdiction',
