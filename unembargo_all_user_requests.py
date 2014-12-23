@@ -2,13 +2,11 @@
 # -- coding: utf-8 --
 import requests
 import json
+import utils
 
-token = '' # You'll need a token. Get here: https://github.com/MuckRock/API-examples/blob/master/get_API_key.py
-url = 'https://www.muckrock.com/api_v1/'
-
-
-headers = {'Authorization': 'Token %s' % token, 'content-type': 'application/json'}
-
+url = utils.API_URL
+token = utils.get_api_key()
+headers = utils.get_headers(token)
 
 user = "morisy" #<--- Put username here. Case sensitive.
 

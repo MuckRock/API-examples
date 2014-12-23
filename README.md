@@ -1,8 +1,8 @@
-API-examples
+MuckRock API
 ============
 
-A collection of scripts using the MuckRock API.
+This repository presents a collection of scripts demonstrating the MuckRock API.
 
-The API is browseable here:
+The API has a [visual interface](https://www.muckrock.com/api_v1/), but it is most powerful when accessed programmatically.
 
-https://www.muckrock.com/api_v1/
+To access the API, you must first request and receive your token (see `get_api_key` method in `utils.py`). The key is generated from your MuckRock user account and password. If you don't have an account, [sign up here](https://www.muckrock.com/accounts/register).

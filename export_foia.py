@@ -2,12 +2,12 @@
 
 import requests
 import unicodecsv
-from utils import get_api_key
+import utils
 
-token = get_api_key()
-url = 'https://www.muckrock.com/api_v1/'
+url = utils.API_URL
+token = utils.get_api_key()
+headers = utils.get_headers(token)
 
-headers = {'Authorization': 'Token %s' % token, 'content-type': 'application/json'}
 next_ = url + 'foia'
 
 fields = (

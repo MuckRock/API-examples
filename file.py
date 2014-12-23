@@ -2,14 +2,11 @@
 
 import requests
 import json
+import utils
 
-token = ''
-url = 'https://www.muckrock.com/api_v1/'
-
-if token:
-    headers = {'Authorization': 'Token %s' % token, 'content-type': 'application/json'}
-else:
-    headers = {'content-type': 'application/json'}
+url = utils.API_URL
+token = utils.get_api_key()
+headers = utils.get_headers(token)
 
 # You can get the PK for the agency and jurisdiction using their API
 # The agency you select must belong to the jurisdiction you select, or you will receive an error

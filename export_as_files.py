@@ -2,16 +2,12 @@
 # -- coding: utf-8 --
 
 import urllib, os, json, datetime, requests, urlparse
+import utils
 
-# token = '' #If you want to export embargoed requests, you'll need to put in an API token that gives you permissions to them.
-# headers = {'Authorization': 'Token %s' % token, 'content-type': 'application/json'} #Uncomment for token usage.
-
-APIurl = 'https://www.muckrock.com/api_v1/'
-
-
-
-headers = {'content-type': 'application/json'} #Uncomment for no token
-
+url = utils.API_URL
+token = utils.get_api_key()
+headers = utils.get_headers(token)
+    
 request_pks = [
                     6996
                 ]

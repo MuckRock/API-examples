@@ -2,16 +2,13 @@
 # -- coding: utf-8 --
 
 import urllib, os, json, datetime, requests, urlparse
+import utils
 
-token = '' #If you want to export embargoed requests, you'll need to put in an API token that gives you permissions to them.
-url = 'https://www.muckrock.com/api_v1/'
+url = utils.API_URL
+token = utils.get_api_key()
+headers = utils.get_headers(token)
 
 # Stuff borrowed from http://stackoverflow.com/questions/6373094/how-to-download-a-file-to-a-specific-path-in-the-server-python
-
-if token:
-    headers = {'Authorization': 'Token %s' % token, 'content-type': 'application/json'}
-else:
-    headers = {'content-type': 'application/json'}
 
 request_pks = [10565]
 
