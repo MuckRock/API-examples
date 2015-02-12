@@ -13,9 +13,6 @@ username = raw_input('Username: ')
 next_url = url + "foia/?user=" + username
 current_page = 0
 
-success_msg = ''
-failure_msg = ''
-
 while next_url:
     # we use next_url because the API results are paginated
     r = http_request.get(next_url, headers=headers)
@@ -30,12 +27,9 @@ while next_url:
     for request in data['results']:
         request_id = request['id']
         request_url = 'foia/%s/' % str(request_id)
-        request_to_embargo = http_request.get(request_url, headers=headers)
-        # Removes the embargo date to make sure it actually embargos.
+        # Removes the embargo date to make sure it permanently embargos.
         data = json.dumps({
             'embargo': True,
             'date_embargo': None
         })
-        request_to_embargo = http_request.patch(request_url,
-                                                headers=headers,
-                                                data=data)
+        http_request.patch(request_url, headers=headers, data=data)
