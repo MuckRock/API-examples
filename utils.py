@@ -1,5 +1,6 @@
 #!/usr/bin/env python2
 
+import sys
 import requests
 from getpass import getpass
 
@@ -23,3 +24,9 @@ def get_headers(token=None):
         }
     else:
         return {'content-type': 'application/json'}
+
+def display_progress(current, total):
+    percent = (current / total) * 100.00
+    sys.stdout.write("\r%d%%" % percent)
+    sys.stdout.flush()
+
