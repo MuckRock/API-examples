@@ -1,46 +1,41 @@
 #!/usr/bin/env python2
 # -- coding: utf-8 --
-import requests
+
+import requests as http_request
 import json
+import utils
 
-token = get_api_key()
-url = 'https://www.muckrock.com/api_v1/'
+url = utils.API_URL
+token = utils.get_api_key()
+headers = utils.get_headers(token)
 
-if token:
-    headers = {'Authorization': 'Token %s' % token, 'content-type': 'application/json'}
-else:
-    headers = {'content-type': 'application/json'}
+username = raw_input('Username: ')
+next_url = url + "foia/?user=" + username
+current_page = 0
 
+success_msg = ''
+failure_msg = ''
 
-user = "morisy" #<--- Put username here. Case sensitive.
-
-page = 1
-next_ = url+"foia/?user="+user
-
-
-
-while next_ is not None:
-    r = requests.get(next_, headers=headers)
-    try:
-        json_data = r.json()
-        print 'Page %d of %d' % (page, json_data['count'] / 20 + 1)
-
-        next_ = json_data['next']
-        for request in json_data['results']:
-            reqNumber = request["id"]
-            editedRequest = requests.get(url + 'foia/%s/' % str(reqNumber), headers=headers)
-            print "Embargoing request number " + str(reqNumber) + " for " + request["title"] + " filed by " + request["username"]
-
-            data = json.dumps({
-               'embargo': True,
-               'date_embargo': None, #Removes the embargo date to make sure it actually embargos.
-            })
-            editedRequest = requests.patch(url + 'foia/%d/' % reqNumber, headers=headers, data=data)
-
-            print "Request Embargoed."
-            if editedRequest.status_code != 200:
-                print '*In Ron Burgendy Voice:* Error? ', editedRequest.status_code, r.text
-        page += 1
-    except Exception as e:
-        print e
-        print 'Error! ', editedRequest.status_code, ": ", editdReqeust.text
+while next_url:
+    # we use next_url because the API results are paginated
+    r = http_request.get(next_url, headers=headers)
+    data = r.json()
+    next_url = data['next']
+    
+    # measures progress by page, not by result
+    current_page += 1
+    total_pages = (data['count'] / 20.0)
+    utils.display_progress(current_page, total_pages)
+    
+    for request in data['results']:
+        request_id = request['id']
+        request_url = 'foia/%s/' % str(request_id)
+        request_to_embargo = http_request.get(request_url, headers=headers)
+        # Removes the embargo date to make sure it actually embargos.
+        data = json.dumps({
+            'embargo': True,
+            'date_embargo': None
+        })
+        request_to_embargo = http_request.patch(request_url,
+                                                headers=headers,
+                                                data=data)

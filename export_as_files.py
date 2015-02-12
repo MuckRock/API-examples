@@ -7,37 +7,35 @@ import utils
 url = utils.API_URL
 token = utils.get_api_key()
 headers = utils.get_headers(token)
-    
-request_pks = [
-                    6996
-                ]
 
+# still need to find a nice way to specify pks from console
+request_pks = [6996]
 
-for pk in request_pks:
+for request in request_pks:
     print "Working on request " + str(pk)
-    #print headers
-    r = requests.get(APIurl + 'foia/%d/' % pk, headers=headers) 
-    json_data = r.json()
-    
-    a = requests.get(APIurl + 'agency/%d/' % json_data['agency'], headers=headers)
-    agency_data = a.json()
-
-    communications = json_data['communications']
+    # get request first
+    request_url = url + 'foia/%d/' % pk
+    request = requests.get(request_url, headers=headers) 
+    request_data = r.json()
+    # get agency second
+    agency_url = url + 'agency/%d/' % request_data['agency']
+    agency = requests.get(agency_url , headers=headers)
+    agency_data = agency.json()
+    # get communications third
+    communications = request_data['communications']
 	
     if communications is None:
-        print "It looks like there were no communications here."
+        print "No communications for request #%d." % pk
     
     if not os.path.exists(str(pk)): # Checks to see if the folder exists.
-        dirName = agency_data['name'] + ' ' + json_data['tracking_id'] + ' ' + json_data['user']
+        dirName = request_data['user'] + '_' + agency_data['name'] + '_' + request_data['tracking_id']
+        # TODO better sanitization on directory names
         print "Creating directory " + dirName
         dirName = dirName.replace(";", "") # to sanitize it from semi-colons
         dirName = dirName.replace(":", "") # to sanitize it from colons
-        
         os.makedirs(dirName)
     else:
         print "The directory already exists. Phew."
-
-    
 	
     for communication in communications:
         commNum = 0
