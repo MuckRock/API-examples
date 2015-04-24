@@ -11,12 +11,12 @@ headers = utils.get_headers(token)
 # still need to find a nice way to specify pks from console
 request_pks = [6996]
 
-for request in request_pks:
-    print "Working on request " + str(pk)
+for request_id in request_pks:
+    print "Working on request " + str(request_id)
     # get request first
-    request_url = url + 'foia/%d/' % pk
+    request_url = url + 'foia/%d/' % request_id
     request = requests.get(request_url, headers=headers) 
-    request_data = r.json()
+    request_data = request.json()
     # get agency second
     agency_url = url + 'agency/%d/' % request_data['agency']
     agency = requests.get(agency_url , headers=headers)
@@ -25,10 +25,12 @@ for request in request_pks:
     communications = request_data['communications']
 	
     if communications is None:
-        print "No communications for request #%d." % pk
+        print "No communications for request #%d." % request_id
     
-    if not os.path.exists(str(pk)): # Checks to see if the folder exists.
-        dirName = request_data['user'] + '_' + agency_data['name'] + '_' + request_data['tracking_id']
+    if not os.path.exists(str(request_id)): # Checks to see if the folder exists.
+        username = requests.get(url + 'user/%d/' % request_data['user'], headers=headers).json()['username']
+        print username
+        dirName = username + '_' + agency_data['name'] + '_' + request_data['tracking_id']
         # TODO better sanitization on directory names
         print "Creating directory " + dirName
         dirName = dirName.replace(";", "") # to sanitize it from semi-colons
@@ -49,7 +51,7 @@ for request in request_pks:
             filename = filename.replace(";", "") # to sanitize it from semi-colons
             filename = filename.replace(":", "") # to sanitize it from colons
             print filename
-            #urllib.urlretrieve(url, '/'+str(pk)+'/'+filename)
+            #urllib.urlretrieve(url, '/'+str(request_id)+'/'+filename)
             urllib.urlretrieve(url, dirName + '/' + filename)
             
         
