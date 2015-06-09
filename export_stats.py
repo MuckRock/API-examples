@@ -34,7 +34,32 @@ fields = (
 "total_page_views",
 "daily_requests_pro",
 "daily_requests_community",
-"daily_requests_beta"
+"daily_requests_beta",
+"daily_articles",
+"total_tasks",
+"total_unresolved_tasks",
+"total_generic_tasks",
+"total_unresolved_generic_tasks",
+"total_orphan_tasks",
+"total_unresolved_orphan_tasks",
+"total_snailmail_tasks",
+"total_unresolved_snailmail_tasks",
+"total_rejected_tasks",
+"total_unresolved_rejected_tasks",
+"total_staleagency_tasks",
+"total_unresolved_staleagency_tasks",
+"total_flagged_tasks",
+"total_unresolved_flagged_tasks",
+"total_newagency_tasks",
+"total_unresolved_newagency_tasks",
+"total_response_tasks",
+"total_unresolved_response_tasks",
+"total_faxfail_tasks",
+"total_unresolved_faxfail_tasks",
+"total_payment_tasks",
+"total_unresolved_payment_tasks",
+"total_crowdfundpayment_tasks",
+"total_unresolved_crowdfundpayment_tasks"
 )
 
 page = 1
