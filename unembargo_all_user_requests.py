@@ -8,7 +8,7 @@ url = utils.API_URL
 token = utils.get_api_key()
 headers = utils.get_headers(token)
 
-user = "morisy" #<--- Put username here. Case sensitive.
+user = "Example" #<--- Put username here. Case sensitive.
 
 page = 1
 next_ = url+"foia/?user="+user
@@ -20,7 +20,6 @@ while next_ is not None:
     try:
         json_data = r.json()
         print 'Page %d of %d' % (page, json_data['count'] / 20 + 1)
-
         next_ = json_data['next']
         for request in json_data['results']:
             reqNumber = request["id"]
@@ -28,15 +27,15 @@ while next_ is not None:
             print "Embargoing request number " + str(reqNumber) + " for " + request["title"] + " filed by " + request["username"]
 
             data = json.dumps({
-               'embargo': True,
+               'embargo': False,
                'date_embargo': None, #Removes the embargo date to make sure it actually embargos.
             })
             editedRequest = requests.patch(url + 'foia/%d/' % reqNumber, headers=headers, data=data)
 
-            print "Request Embargoed."
+            print "Request Unembargoed."
             if editedRequest.status_code != 200:
                 print '*In Ron Burgendy Voice:* Error? ', editedRequest.status_code, r.text
         page += 1
     except Exception as e:
         print e
-        print 'Error! ', editedRequest.status_code, ": ", editdReqeust.text
+        print 'Error! ', editedRequest.status_code, ": ", editedRequest.text
