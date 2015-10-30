@@ -27,7 +27,7 @@ fields = (
 
 page = 1
 
-csv_file = open('foia.csv', 'w')
+csv_file = open('tasks.csv', 'w')
 csv_file.seek(0)
 csv_writer = unicodecsv.writer(csv_file)
 csv_writer.writerow(fields)
