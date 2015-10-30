@@ -9,7 +9,11 @@ url = utils.API_URL
 token = utils.get_api_key()
 headers = utils.get_headers(token)
 
-username = raw_input('Username: ')
+
+
+username = raw_input('Which user do you want to remove requests from?: ')
+destination = raw_input('Destination user ID (not username): ')
+
 next_url = url + "foia/?user=" + username
 current_page = 0
 
@@ -25,11 +29,12 @@ while next_url:
     utils.display_progress(current_page, total_pages)
 
     for request in data['results']:
+        print "Working on request " + str(request['id'])
         request_id = request['id']
-        request_url = 'foia/%s/' % str(request_id)
-        # Removes the embargo date to make sure it permanently embargos.
+        request_url = 'https://www.muckrock.com/api_v1/foia/%s/' % str(request_id)
+        print "This is the request url " + request_url
         data = json.dumps({
-            'embargo': True,
-            'date_embargo': None
+            'user': destination
         })
-        http_request.patch(request_url, headers=headers, data=data)
+        print data
+        editedRequest = http_request.patch(request_url, headers=headers, data=data)
