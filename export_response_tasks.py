@@ -12,17 +12,14 @@ next_ = url + 'responsetask'
 
 fields = (
     'id',
+    'resolved_by',
+    'communication',
     'date_created',
     'date_done',
     'resolved',
-    'assigned',
-    'orphantask',
-    'snailmailtask',
-    'rejectedemailtask',
-    'staleagencytask',
-    'flaggedtask',
-    'newagencytask',
-    'responsetask',
+    'created_from_orphan',
+    'predicted_status',
+    'predicted_status',
 )
 
 page = 1
