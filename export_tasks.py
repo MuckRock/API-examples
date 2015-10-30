@@ -12,23 +12,17 @@ next_ = url + 'task'
 
 fields = (
     'id',
-    'user',
-    'title',
-    'slug',
-    'status',
-    'jurisdiction',
-    'agency',
-    'date_submitted',
+    'date_created',
     'date_done',
-    'date_due',
-    'days_until_due',
-    'date_followup',
-    'embargo',
-    'date_embargo',
-    'price',
-    'description',
-    'tracking_id',
-    'tags'
+    'resolved',
+    'assigned',
+    'orphantask',
+    'snailmailtask',
+    'rejectedemailtask',
+    'staleagencytask',
+    'flaggedtask',
+    'newagencytask',
+    'responsetask',
 )
 
 page = 1
