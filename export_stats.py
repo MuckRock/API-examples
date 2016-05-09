@@ -1,13 +1,10 @@
 #!/usr/bin/env python2
 
+# gotta install requests and unicodecsv with pip!
 import requests
 import unicodecsv
+# we provide the utils
 import utils
-
-token = utils.get_api_key()
-url = utils.API_URL + 'statistics'
-headers = utils.get_headers(token)
-next_ = url
 
 fields = (
     "date",
@@ -61,20 +58,18 @@ fields = (
     "total_unresolved_crowdfundpayment_tasks"
 )
 
-csv_file = open('stats.csv', 'w')
-csv_file.seek(0)
-csv_writer = unicodecsv.writer(csv_file)
-csv_writer.writerow(fields)
-
-page = 0
-per_page = 50
-while next_ is not None:
-    response = requests.get(next_, headers=headers)
-    data = response.json()
-    next_ = data['next']
-    total_pages = data['count'] / per_page + 1
-    page += 1
-    utils.display_progress(page, total_pages)
-    for datum in data['results']:
-        csv_writer.writerow([datum[field] for field in fields])
-print '\n'
+if __name__ == '__main__':
+    # Gets all the data we need to send a request to the MuckRock API
+    token = utils.get_api_key()
+    url = utils.API_URL + 'statistics'
+    headers = utils.get_headers(token)
+    # Opens the stats.csv file and moves us to the beginning to overwrite
+    csv_file = open('stats.csv', 'w')
+    csv_file.seek(0)
+    # Initializes the CSV writer and writes the header row of the CSV
+    csv_writer = unicodecsv.writer(csv_file)
+    csv_writer.writerow(fields)
+    # Gets all the stats and returns them as a single blob of de-paginated data
+    stats = utils.get(url, headers)
+    # Loops through each stat and writes it as a row in the CSV
+    csv_writer.writerow([[stat[field] for field in fields] for stat in stats])
