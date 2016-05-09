@@ -34,6 +34,6 @@ def get_headers(token=None):
         return {'content-type': 'application/json'}
 
 def display_progress(current, total):
-    percent = (current / total) * 100.00
+    percent = (float(current) / total) * 100.00
     sys.stdout.write("\r%d%%" % percent)
     sys.stdout.flush()
