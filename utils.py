@@ -5,6 +5,7 @@ import sys
 import requests
 from getpass import getpass
 
+# Provides the base url as an importable variable
 API_URL = 'https://www.muckrock.com/api_v1/'
 
 def get_api_key():
@@ -33,7 +34,18 @@ def get_headers(token=None):
     else:
         return {'content-type': 'application/json'}
 
+def get(url, headers):
+    """De-paginates the results to a specific URL."""
+    response = requests.get(url, headers=headers)
+    data = response.json()
+    next_page = data['next']
+    page_results = data['results']
+    if next_page:
+        # page results are always a list type, so we combine them with the + operator
+        page_results += get(next_page, headers)
+    return page_results
+
 def display_progress(current, total):
-    percent = (current / total) * 100.00
+    percent = (float(current) / total) * 100.00
     sys.stdout.write("\r%d%%" % percent)
     sys.stdout.flush()
