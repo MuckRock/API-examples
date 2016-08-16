@@ -33,7 +33,7 @@ fields = (
 "pro_user_names",
 "total_page_views",
 "daily_requests_pro",
-"daily_requests_community",
+"daily_requests_basic",
 "daily_requests_beta",
 "daily_articles",
 "total_tasks",
@@ -78,6 +78,5 @@ while next_ is not None:
             csv_writer.writerow([datum[field] for field in fields])
         print 'Page %d of %d' % (page, json['count'] / 20 + 1)
         page += 1
-    except:
-        print r
-        print r.text
+    except Exception as e:
+        print e
