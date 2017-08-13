@@ -51,11 +51,11 @@ while next_url:
                 unacknowledged_file.write("Requester Name: " + request['communications'][0]["from_who"] + "\n")
             else:
                     print "No requester's name"
-            unacknowledged_file.write("MuckRock" + "\n")
+
+            unacknowledged_file.write("Address associated with this request:\n\nMuckRock \n")
             unacknowledged_file.write("DEPT MR" + str(request_id))
-            unacknowledged_file.write("411A Highland Ave" + "\n" + "Somerville, MA 02144-2516")
+            unacknowledged_file.write("411A Highland Ave\nSomerville, MA 02144-2516")
             unacknowledged_file.write("\n\n\n================================\n================================\n================================\n")
-            unacknowledged_file.write("Address associated with this request:\n\n MuckRock \n")
 
 
         elif request['status'] == 'processed':
@@ -66,6 +66,7 @@ while next_url:
 
             if request['embargo'] is False:
                 acknowledged_file.write("Request URL: muckrock.com" + str(request['absolute_url']) + "\n" + "\n")
+
             acknowledged_file.write("Summary: "  + str(request['description'].encode('utf-8').strip())[0:300] + "\n" + "\n")
             acknowledged_file.write("Submitted: " + str(request['date_submitted']) + "\n")
 
@@ -83,10 +84,9 @@ while next_url:
             else:
                 acknowledged_file.write("Tracking Number: We have not received a tracking number for this request.\n\n")
             acknowledged_file.write("Last Response From Agency: " + str(request['date_followup'])+ "\n" + "\n")
-
             acknowledged_file.write("Address associated with this request:\n\nMuckRock \n")
             acknowledged_file.write("DEPT MR" + str(request_id))
-            acknowledged_file.write("\n411A Highland Ave\nSomerville, MA 02144-2516")
+            acknowledged_file.write("411A Highland Ave\nSomerville, MA 02144-2516")
             acknowledged_file.write("\n\n\n================================\n================================\n================================\n")
 
         else: #put stuff here
