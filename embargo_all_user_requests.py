@@ -10,7 +10,7 @@ token = utils.get_api_key()
 headers = utils.get_headers(token)
 
 username = raw_input('Username: ')
-next_url = url + "foia/?user=" + username
+next_url = "https://www.muckrock.com/api_v1/foia/?user=" + username
 current_page = 0
 
 while next_url:
@@ -18,18 +18,19 @@ while next_url:
     r = http_request.get(next_url, headers=headers)
     data = r.json()
     next_url = data['next']
-    
+
     # measures progress by page, not by result
     current_page += 1
     total_pages = (data['count'] / 20.0)
     utils.display_progress(current_page, total_pages)
-    
+
     for request in data['results']:
         request_id = request['id']
-        request_url = 'foia/%s/' % str(request_id)
+        request_url = 'https://www.muckrock.com/api_v1/foia/%s/' % str(request_id)
         # Removes the embargo date to make sure it permanently embargos.
         data = json.dumps({
             'embargo': True,
-            'date_embargo': None
+            'date_embargo': None,
+            'permanent_embargo': True
         })
         http_request.patch(request_url, headers=headers, data=data)
