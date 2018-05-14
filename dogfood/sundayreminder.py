@@ -23,8 +23,7 @@ def emojiTranslate(confidence):
 if os.path.isfile('check_in.csv'):
 	with open('check_in.csv') as csvfile:
 		print "Inspecting check_in.csv"
-		mondayNotes = open("mondaynotes.txt", 'w')
-		print "Opening up the Monday notes."
+		mondayNotes = open("sundayreminder.txt", 'w')
 		reader = csv.DictReader(csvfile)
 		mondayNotes.writelines("New Goals + Last Week's Priorities:\n")
 		mondayNotes.writelines("==================\n")
