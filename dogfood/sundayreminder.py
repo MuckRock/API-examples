@@ -23,12 +23,13 @@ def emojiTranslate(confidence):
 if os.path.isfile('check_in.csv'):
 	with open('check_in.csv') as csvfile:
 		print "Inspecting check_in.csv"
-		mondayNotes = open("sundayreminder.txt", 'w')
+		mondayNotes = open("sunday_reminder.txt", 'w')
 		reader = csv.DictReader(csvfile)
-		mondayNotes.writelines("New Goals + Last Week's Priorities:\n")
+		mondayNotes.writelines("Attached are last week’s updates for reference for those who used the form; if you didn’t, please forward me along last week’s updates when you get a chance along with this week’s so I can make sure they eventually get added in.\n\n")
+		mondayNotes.writelines("Check in submission here: https://www.muckrock.com/assignment/monday-check-in-25/ \n")
+		mondayNotes.writelines("Or copy and paste Google Form\: http://bit.ly/MuckRockStatus \n\n")
+		mondayNotes.writelines("Quarterly Goals + Last Week's Priorities:\n")
 		mondayNotes.writelines("==================\n")
-		mondayNotes.writelines("\n")
-
 		for row in reader:
 #			d = timedelta(row['datetime'],datetime.date.today())
 #			if d(days)<5:
@@ -38,16 +39,16 @@ if os.path.isfile('check_in.csv'):
 				mondayNotes.writelines("==================\n")
 				mondayNotes.writelines("Quarterly Goals\n")
 				mondayNotes.writelines("_______________\n")
-				mondayNotes.writelines(row["Quarterly Goal #1"])
-				mondayNotes.writelines(row["Quarterly Goal #2"])
-				mondayNotes.writelines(row["Quarterly Goal #3"])
+				mondayNotes.writelines("\n * "+ row["Quarterly Goal #1"])
+				mondayNotes.writelines("\n * "+ row["Quarterly Goal #2"])
+				mondayNotes.writelines("\n * "+ row["Quarterly Goal #3"])
 
 				mondayNotes.writelines("\n\nLast Week's Tasks" + "\n")
 				mondayNotes.writelines("_______________" + "\n")
 				task = 1
 				try:
 					while row["What's this week's prioritized task #" + str(task) + "?"] != "":
-						mondayNotes.writelines("* " + row["What's this week's prioritized task #" + str(task) + "?"])
+						mondayNotes.writelines("\n* " + row["What's this week's prioritized task #" + str(task) + "?"])
 						task += 1
 				except:
 					print "no more tasks"
