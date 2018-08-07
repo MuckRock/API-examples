@@ -17,6 +17,7 @@ url = 'https://www.muckrock.com/api_v1/'
 headers = {'Authorization': 'Token %s' % token, 'content-type': 'application/json'}
 
 page = 1
+days = 7
 
 staff_names = (
 "JPat Brown",
@@ -33,27 +34,46 @@ staff_names = (
 def getWeeklyUpdates(staffer):
 	print "Working on the goals progress the past week for " + staffer
 	next_ = url + 'assignment-responses/?crowdsource=25&ordering=-id'
-	r = requests.get(next_, headers=headers)
-	json = r.json()
+
 	staffer_log = []
 	day = 0
 	entry = 0
-	while day <= 3:
-		for goal in range(1,3): ## Need to add in succesful pagination
-			print "Looking at entry " + str(entry)
-			if json['results'][entry]["user"] == staffer:
-				print "Found goal " + str(goal) + " update."
-				print json['results'][entry]["values"][0]['value']
-				if name in staffer_log["Goal #" + str(goal)]]:
-				else:
-					staffer_log["Goal #" + str(goal)]["name"] = json['results'][entry]["values"][0]['value']["name"]
-				= json['results'][entry]["values"]
-				print "Confidence for " + staffer + " was " + str(staffer_log["Quarterly Goal #" + goal][day])
-				day += 1
-				entry += 1
+	while day < days and next_ is not None:
+		print "Looking at entry " + str(entry)
+		r = requests.get(next_, headers=headers)
+		try:
+	        json = r.json()
+	        next_ = json['next']
+	        for datum in json['results']:
+				print "User is " + datum["user"]
+				if datum["user"] == staffer:
+					print "It's a match!"
+					if day = 0:
+						staffer_log["Goal #1"]["name"] = json['results'][entry]["values"][0]['value']["name"]
+						staffer_log["Goal #2"]["name"] = json['results'][entry]["values"][0]['value']["name"]
+						staffer_log["Goal #3"]["name"] = json['results'][entry]["values"][0]['value']["name"]
+
+	        print 'Page %d of %d' % (page, json['count'] / 10 + 1)
+	        page += 1
+	    except Exception as e:
+	        print e
+		if json['results'][entry]["user"] == staffer:
+			print "Found goal " + str(goal) + " for " + staffer + "."
+			if name in staffer_log["Goal #" + str(goal)]]:
+				print "Adding this as the goal: " + print(json['results'][entry]["values"][0]['value']["name"])
+				staffer_log["Goal #1"]["name"] = json['results'][entry]["values"][0]['value']["name"]
+				staffer_log["Goal #1"]["entries"] = [json['results'][entry]["values"][1]['value']["name"]]
 			else:
-				print "No goals that time"
-				entry += 1
+				print "Adding this as the goal: " + print(json['results'][entry]["values"][0]['value']["name"])
+				staffer_log["Goal #1"]["name"] = json['results'][entry]["values"][0]['value']["name"]
+				staffer_log["Goal #1"]["entries"] = [json['results'][entry]["values"][1]['value']["name"]]
+			= json['results'][entry]["values"]
+			print "Confidence for " + staffer + " was " + str(staffer_log["Quarterly Goal #" + goal][day])
+			day += 1
+			entry += 1
+		else:
+			print "No goals that time"
+			entry += 1
 	return staffer_log
 
 def getStats():
@@ -95,10 +115,6 @@ def emojiTranslate(confidence):
 		return "❓"
 
 
-print "Pulling check ins via API"
-
-
-
 
 if os.path.isfile('check_in.csv'):
 	with open('check_in.csv') as csvfile:
@@ -116,18 +132,8 @@ if os.path.isfile('check_in.csv'):
 		mondayNotes.writelines("\n")
 
 		for staffer in staff_names:
-#			d = timedelta(row['datetime'],datetime.date.today())
-#			if d(days)<5:
 			print "Here is what we've got on " + staffer + ":"
 			print getWeeklyUpdates(staffer)
-#		misc = ["Upcoming in next four weeks", "Department FYSA", "user"]
-#		misc = ["user"]
-#		for section in misc:
-#			mondayNotes.writelines(section + ":\n")
-#			mondayNotes.writelines("==================\n")
-#			for row in reader:
-#				print "Investigating a row"
-#				mondayNotes.writelines(row[section] + "__—" + row["user"] + "__\n")
 		print "All done, saving file."
 		mondayNotes.close()
 else:
