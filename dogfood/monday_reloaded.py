@@ -3,12 +3,18 @@ import urllib
 import csv
 from datetime import datetime, timedelta
 import os.path
-
-
 import requests
 import csv
 import json
-#from pylab import *
+import markdown
+
+import matplotlib.pyplot as plt
+import numpy as np
+
+
+
+## Trendline via https://github.com/aayoubi/spyklines
+
 
 from utils import get_api_key
 
@@ -20,7 +26,6 @@ page = 1
 days = 7
 
 staff_names = (
-"JPat Brown",
 "Caitlin Russell",
 "Beryl Lipton",
 "Mitchell Kotler",
@@ -108,30 +113,55 @@ def emojiTranslate(confidence):
 				return " 💯"
 		return "❓"
 
+def chartData(data, name, filename):
+		fig, ax = plt.subplots()
+		plt.plot(data, color='k')
+		ax.set_title(name)
+		for k,v in ax.spines.items():
+			v.set_visible(False)
+		ax.set_xticks([])
+		ax.set_yticks([])
+		plt.savefig(filename +'.png')
 
 
 if os.path.isfile('check_in.csv'):
 	with open('check_in.csv') as csvfile:
-		mondayNotes = open("mondaynotes.txt", 'w')
-		print "Opening up the Monday notes."
+		mondayNotes = open("mondaynotes.md", 'w')
 		reader = csv.DictReader(csvfile)
-		mondayNotes.writelines("Key Stats:\n")
-		mondayNotes.writelines("==================\n\n")
-		mondayNotes.writelines("MuckRock:\n")
+		mondayNotes.writelines("## Key Stats:\n")
+		mondayNotes.writelines("---\n\n")
+		mondayNotes.writelines("## MuckRock:\n")
 		stats = getStats()
 		for stat in stats:
 				mondayNotes.writelines(stat[0] + " is currently at: " + str(stat[1]) + ", which has changed by " + str(stat[2]) + "\n")
-		mondayNotes.writelines("==================\n")
+		mondayNotes.writelines("---\n")
 		mondayNotes.writelines("\n")
 
 		for staffer in staff_names:
-			print "Here is what we've got on " + staffer + ":"
 			staffer_data = getWeeklyUpdates(staffer)
-			print staffer_data.goal1
-			print staffer_data.goal1data
-			print staffer_data.goal2
-			print staffer_data.goal3
+			mondayNotes.writelines("## " + staffer + "\n")
+			mondayNotes.writelines(staffer_data.goal1 + "\n")
+			chartData(staffer_data.goal1data, staffer_data.goal1, staffer + "goal1")
+ 			mondayNotes.writelines(" ![](" + staffer + "goal1.png)\n")
+
+			mondayNotes.writelines(staffer_data.goal2)
+			chartData(staffer_data.goal1data, staffer_data.goal2, staffer + "goal2")
+			mondayNotes.writelines(" ![](" + staffer + "goal2.png)\n")
+
+			mondayNotes.writelines(staffer_data.goal3)
+			chartData(staffer_data.goal1data, staffer_data.goal3, staffer + "goal3")
+			mondayNotes.writelines(" ![](" + staffer + "goal3.png)\n")
+
 		print "All done, saving file."
 		mondayNotes.close()
+
+		markdownFile = open('mondaynotes.md', 'r')
+		html = markdown.markdown(markdownFile.read())
+
+		text_file = open("report.html", "w")
+		text_file.write(html)
+		text_file.close()
+
+
 else:
 	print "Something went horribly wrong."
