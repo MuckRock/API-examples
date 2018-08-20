@@ -8,13 +8,14 @@ import csv
 import json
 import markdown
 
+
 import matplotlib.pyplot as plt
 import numpy as np
+import pandas as pd
 
+stats = pd.read_csv('stats.csv')
 
-
-## Trendline via https://github.com/aayoubi/spyklines
-
+## should be able to graph what we need to from that 
 
 from utils import get_api_key
 
@@ -27,7 +28,7 @@ days = 7
 
 staff_names = (
 "Caitlin Russell",
-"Beryl Lipton",
+"Jessie Gomez",
 "Mitchell Kotler",
 "Dylan Freedman",
 "Aron Pilhofer",
@@ -119,9 +120,17 @@ def chartData(data, name, filename):
 		ax.set_title(name)
 		for k,v in ax.spines.items():
 			v.set_visible(False)
-		ax.set_xticks([])
+#		ax.set_xticks([])
 		ax.set_yticks([])
 		plt.savefig(filename +'.png')
+#		ax = fig.add_axes((0.1, 0.2, 0.8, 0.7))
+#		ax.bar([0, 1], [0, 100], 0.25)
+#		ax.spines['right'].set_color('none')
+#		ax.spines['top'].set_color('none')
+#		ax.xaxis.set_ticks_position('bottom')
+		ax.set_xticks([0, 1])
+		ax.set_xlim([-0.5, 8])
+		ax.set_ylim([-1, 13])
 
 
 if os.path.isfile('check_in.csv'):
