@@ -160,7 +160,7 @@ def getAssignmentStats():
 def convertAssignmentLabel(assignmentNum):
 	converter = {
 		14: "Help us build an FCC complaint Twitter bot",
-		15: "MuckRock Events and Talks",
+		35: "MuckRock Events and Talks",
 		24: "Join the MuckRock FOIA Slack",
 		25: "Monday Check In",
 		30: "Help explore Donald Rumsfeld's Snowflakes",
@@ -179,7 +179,8 @@ def convertAssignmentLabel(assignmentNum):
 		79: "FOIA 101 Tip Line",
 		76: "Tell us about your FOIA Fees!",
 		83: "Help read the Brett Kavanaugh confirmation hearing files",
-		85: "College Cola Contract Crowdsource"
+		85: "College Cola Contract Crowdsource",
+		89: "Test"
 		}
 	if assignmentNum in converter:
 		print converter[assignmentNum]
@@ -250,7 +251,6 @@ def getRecentCampaigns():
 
 	for campaign in campaigns["campaigns"]:
 		try:
-#			print campaign.keys()
 			if today - margin <= datetime.datetime.strptime(campaign["send_time"][:10], "%Y-%m-%d").date() <= today:
 				print "Matching campaign:"
 				print "URL: " + campaign["archive_url"]
@@ -265,18 +265,31 @@ newsletterData = getRecentCampaigns()
 getStats()
 
 dataForNumbers = pd.read_csv('stats.csv').set_index("date")
+dataForDocumentCloud = pd.read_csv('docstats.csv').set_index("day")
 
 mondayNotes.writelines("# Numbers \n")
 mondayNotes.writelines("## MuckRock \n")
 
-mondayNotes.writelines("| Stat | Past Week | Week Before | Weekly Average* | vs. Goal | TKTK \n")
+mondayNotes.writelines("| Stat | Past Week | Week Before | Weekly Average* | vs. Goal \n")
 mondayNotes.writelines("|---|---|---|---|---|---|---|\n")
-mondayNotes.writelines("| Pro Users | " + str(int(dataForNumbers.iloc[0]["pro_users"])) + " | " + str(int(dataForNumbers.iloc[7]["pro_users"])) + " |   |   | | |\n")
-mondayNotes.writelines("| Organizational Users | " + str(int(dataForNumbers.iloc[0]["total_active_org_members"])) + " | " + str(int(dataForNumbers.iloc[7]["total_active_org_members"])) + " |   |   | | | \n")
-mondayNotes.writelines("| Combined Premium | " + str(int(dataForNumbers.iloc[0]["total_active_org_members"] + dataForNumbers.iloc[0]["pro_users"])) + " | " + str(int(dataForNumbers.iloc[7]["total_active_org_members"] + dataForNumbers.iloc[7]["pro_users"])) + " |     | " + str(int((dataForNumbers.iloc[0]["total_active_org_members"] + dataForNumbers.iloc[0]["pro_users"]) / 229 * 100)) + "% (Goal: 229) | | \n")
-mondayNotes.writelines("| New Assignments | " + str(int(dataForNumbers.iloc[0]["total_crowdsource_responses"] - dataForNumbers.iloc[7]["total_crowdsource_responses"])) + "| " + str(int(dataForNumbers.iloc[7]["total_crowdsource_responses"] - dataForNumbers.iloc[14]["total_crowdsource_responses"])) + "  | " + str(int(dataForNumbers.iloc[0]["total_crowdsource_responses"] - dataForNumbers.iloc[83]["total_crowdsource_responses"]/12)) + " |   " + str(int(dataForNumbers.iloc[0]["total_crowdsource_responses"] / 3000 * 100)) + "% (" + str(int(dataForNumbers.iloc[0]["total_crowdsource_responses"])) + " out of 3000) | |\n")
-mondayNotes.writelines("| New Assignment Users | " + str(int(dataForNumbers.iloc[0]["num_crowdsource_responded_users"] - dataForNumbers.iloc[7]["num_crowdsource_responded_users"])) + "| " + str(int(dataForNumbers.iloc[7]["num_crowdsource_responded_users"] - dataForNumbers.iloc[14]["num_crowdsource_responded_users"])) + "  | " + str(int((dataForNumbers.iloc[0]["num_crowdsource_responded_users"] - dataForNumbers.iloc[83]["num_crowdsource_responded_users"]))/12) + " |  | |  |\n")
-mondayNotes.writelines("| Requests | " + str(int(dataForNumbers.iloc[0]["total_requests"] - dataForNumbers.iloc[7]["total_requests"])) + "| " + str(int(dataForNumbers.iloc[7]["total_requests"] - dataForNumbers.iloc[14]["total_requests"])) + "  | " + str(int((dataForNumbers.iloc[0]["total_requests"] - dataForNumbers.iloc[83]["total_requests"])/12)) + " |  |||| |\n")
+mondayNotes.writelines("| Pro Users | " + str(int(dataForNumbers.iloc[0]["pro_users"])) + " | " + str(int(dataForNumbers.iloc[7]["pro_users"])) + " |   |   | |\n")
+mondayNotes.writelines("| Organizational Users | " + str(int(dataForNumbers.iloc[0]["total_active_org_members"])) + " | " + str(int(dataForNumbers.iloc[7]["total_active_org_members"])) + " |   |    | | \n")
+mondayNotes.writelines("| Combined Premium | " + str(int(dataForNumbers.iloc[0]["total_active_org_members"] + dataForNumbers.iloc[0]["pro_users"])) + " | " + str(int(dataForNumbers.iloc[7]["total_active_org_members"] + dataForNumbers.iloc[7]["pro_users"])) + " |     | " + str(int((dataForNumbers.iloc[0]["total_active_org_members"] + dataForNumbers.iloc[0]["pro_users"]) / 229 * 100)) + "% (Goal: 229) | \n")
+mondayNotes.writelines("| New Assignments | " + str(int(dataForNumbers.iloc[0]["total_crowdsource_responses"] - dataForNumbers.iloc[7]["total_crowdsource_responses"])) + "| " + str(int(dataForNumbers.iloc[7]["total_crowdsource_responses"] - dataForNumbers.iloc[14]["total_crowdsource_responses"])) + "  | " + str(int(dataForNumbers.iloc[0]["total_crowdsource_responses"] - dataForNumbers.iloc[83]["total_crowdsource_responses"]/12)) + " |   " + str(int(dataForNumbers.iloc[0]["total_crowdsource_responses"] / 3000 * 100)) + "% (" + str(int(dataForNumbers.iloc[0]["total_crowdsource_responses"])) + " out of 3000) |\n")
+mondayNotes.writelines("| New Assignment Users | " + str(int(dataForNumbers.iloc[0]["num_crowdsource_responded_users"] - dataForNumbers.iloc[7]["num_crowdsource_responded_users"])) + "| " + str(int(dataForNumbers.iloc[7]["num_crowdsource_responded_users"] - dataForNumbers.iloc[14]["num_crowdsource_responded_users"])) + "  | " + str(int((dataForNumbers.iloc[0]["num_crowdsource_responded_users"] - dataForNumbers.iloc[83]["num_crowdsource_responded_users"]))/12) + " |  | | \n")
+mondayNotes.writelines("| Requests | " + str(int(dataForNumbers.iloc[0]["total_requests"] - dataForNumbers.iloc[7]["total_requests"])) + "| " + str(int(dataForNumbers.iloc[7]["total_requests"] - dataForNumbers.iloc[14]["total_requests"])) + "  | " + str(int((dataForNumbers.iloc[0]["total_requests"] - dataForNumbers.iloc[83]["total_requests"])/12)) + " |  ||||\n")
+
+mondayNotes.writelines("## DocumentCloud \n")
+
+mondayNotes.writelines("| Stat | Past Week | Week Before | Weekly Average* | vs. Goal \n")
+mondayNotes.writelines("|---|---|---|---|---|---|---|\n")
+print "accounts is " + str(dataForDocumentCloud.iloc[0]["accounts"])
+mondayNotes.writelines("| New Accounts | " + str(int(dataForDocumentCloud.iloc[0]["accounts"]-dataForDocumentCloud.iloc[7]["accounts"])) + " | " + str(int(dataForDocumentCloud.iloc[7]["accounts"]-dataForDocumentCloud.iloc[14]["accounts"])) + " | " + str(int((dataForDocumentCloud.iloc[0]["accounts"] - dataForDocumentCloud.iloc[83]["accounts"])/12)) + " |   | |\n")
+mondayNotes.writelines("| Active Accounts | " + str(int(dataForDocumentCloud.iloc[0]["active accounts"])) + " | " + str(int(dataForDocumentCloud.iloc[7]["active accounts"])) + " | |   | |\n")
+mondayNotes.writelines("| New Pages | " + str(int(dataForDocumentCloud.iloc[0]["total pages"]-dataForDocumentCloud.iloc[7]["total pages"])) + " | " + str(int(dataForDocumentCloud.iloc[7]["total pages"]-dataForDocumentCloud.iloc[14]["total pages"])) + " | " + str(int((dataForDocumentCloud.iloc[0]["total pages"] - dataForDocumentCloud.iloc[83]["total pages"])/12)) + " |   | |\n")
+mondayNotes.writelines("| New Public Pages | " + str(int(dataForDocumentCloud.iloc[0]["total public pages"]-dataForDocumentCloud.iloc[7]["total public pages"])) + " | " + str(int(dataForDocumentCloud.iloc[7]["total public pages"]-dataForDocumentCloud.iloc[14]["total public pages"])) + " | " + str(int((dataForDocumentCloud.iloc[0]["total public pages"] - dataForDocumentCloud.iloc[83]["total public pages"])/12)) + " |   | |\n")
+mondayNotes.writelines("| New Orgs | " + str(int(dataForDocumentCloud.iloc[0]["total orgs"]-dataForDocumentCloud.iloc[7]["total orgs"])) + " | " + str(int(dataForDocumentCloud.iloc[7]["total orgs"]-dataForDocumentCloud.iloc[14]["total orgs"])) + " | " + str(int((dataForDocumentCloud.iloc[0]["total orgs"] - dataForDocumentCloud.iloc[83]["total orgs"])/12)) + " |   | |\n")
+
 
 mondayNotes.writelines("\* Weekly average for last 12 weeks\n")
 
@@ -346,10 +359,10 @@ for staffer in staff_names:
 
 mondayNotes.close()
 
-markdownFile = open('mondaynotes.md', 'r')
-html = markdown.markdown(markdownFile.read())
-mondayNotes.close()
+#markdownFile = open('mondaynotes.md', 'r')
+#html = markdown.markdown(markdownFile.read())
+#mondayNotes.close()
 
-text_file = open("report.html", "w")
-text_file.write(html)
-text_file.close()
+#text_file = open("report.html", "w")
+#text_file.write(html)
+#open .text_file.close()
