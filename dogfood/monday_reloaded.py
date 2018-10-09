@@ -28,8 +28,9 @@ headers = utils.get_headers(token)
 
 mondayNotes = open("mondaynotes.md", 'w')
 
-token = get_api_key()
 mailChimpKey = raw_input('What is your Mailchimp API Key? ')
+
+token = get_api_key()
 
 url = 'https://www.muckrock.com/api_v1/'
 headers = {'Authorization': 'Token %s' % token, 'content-type': 'application/json'}
