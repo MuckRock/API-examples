@@ -1,5 +1,7 @@
 #!/usr/bin/env python2
 
+from time import sleep
+
 import requests
 import unicodecsv
 
@@ -53,6 +55,9 @@ jurisdiction_fields = (
 
 page = 1
 
+# make this true while exporting data to not crash on errors
+SUPRESS_ERRORS = False 
+
 # This allows you to cach jurisdiction look ups
 jurisdictions = {}
 
@@ -62,6 +67,7 @@ def get_jurisdiction(jurisdiction_id):
         return jurisdictions[jurisdiction_id]
     else:
         # print 'getting jurisdiction', jurisdiction_id
+        sleep(1) # rate limit
         r = requests.get(url + 'jurisdiction/' + str(jurisdiction_id), headers=headers)
         jurisdiction_json = r.json()
         if jurisdiction_json['parent']: # USA has no paremt
@@ -86,7 +92,8 @@ while next_ is not None:
             jurisdiction_values = [jurisdiction[field] for field in jurisdiction_fields]
             csv_writer.writerow(agency_values + jurisdiction_values)
         print 'Page %d of %d' % (page, json['count'] / 20 + 1)
-        break
         page += 1
     except Exception as e:
         print 'Error', e
+        if not SUPRESS_ERRORS:
+            raise
