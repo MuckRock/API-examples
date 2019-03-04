@@ -1,19 +1,40 @@
 #!/usr/bin/env python2
 # -- coding: utf-8 --
 
-import os, json, datetime, requests
-import utils, time
+# Standard Library
+import datetime
+import json
+import os
+import time
+
+# Third Party
+import requests
 from simplejson.scanner import JSONDecodeError
+
+import utils
 
 url = utils.API_URL
 token = utils.get_api_key()
 headers = utils.get_headers(token)
 
-page = 476
+page = 599
 next_ = url + 'foia/?embargo=3&page=%d' % page
 
 agencies = {}
 jurisdictions = {}
+
+def get_jurisdiction(jurisdiction_id):
+    global jurisdictions
+    if jurisdiction_id in jurisdictions:
+        return jurisdictions[jurisdiction_id]
+    else:
+        print 'getting jurisdiction', jurisdiction_id
+        r = requests.get(url + 'jurisdiction/' + str(jurisdiction_id), headers=headers)
+        jurisdiction_json = r.json()
+        jurisdiction = '%s_%s' % (jurisdiction_id, jurisdiction_json['slug'])
+        jurisdictions[jurisdiction_id] = jurisdiction
+        return jurisdiction
+
 
 while next_ is not None: # Handling at the page level
     try:
@@ -30,25 +51,18 @@ while next_ is not None: # Handling at the page level
                 continue
 
             if request['agency'] in agencies:
-                agency = agencies[request['agency']]
+                agency, jurisdiction = agencies[request['agency']]
             else:
                 if request['agency'] is None:
                     agency = 'None'
+                    jurisdiction = 'None'
                 else:
                     print 'getting agency', request['agency']
                     r = requests.get(url + 'agency/' + str(request['agency']), headers=headers)
-                    agency = r.json()
-                    agency = '%s_%s' % (request['agency'], agency['slug'])
-                    agencies[request['agency']] = agency
-
-            if request['jurisdiction'] in jurisdictions:
-                jurisdiction = jurisdictions[request['jurisdiction']]
-            else:
-                print 'getting jurisdiction', request['jurisdiction']
-                r = requests.get(url + 'jurisdiction/' + str(request['jurisdiction']), headers=headers)
-                jurisdiction = r.json()
-                jurisdiction = '%s_%s' % (request['jurisdiction'], jurisdiction['slug'])
-                jurisdictions[request['jurisdiction']] = jurisdiction
+                    agency_json = r.json()
+                    agency = '%s_%s' % (request['agency'], agency_json['slug'])
+                    jurisdiction = get_jurisdiction(agency_json['jurisdiction'])
+                    agencies[request['agency']] = (agency, jurisdiction)
 
             communications = request['communications']
 
@@ -59,12 +73,14 @@ while next_ is not None: # Handling at the page level
             for i, communication in enumerate(communications):
                 for file_ in communication['files']:
                     fileurl = file_['ffile']
-                    file_name = '%s_%s' % (file_['date'], fileurl.split('/')[-1])
-                    with open('%s/%s' % (dir_name, file_name), 'wb') as f:
-                        f.write(requests.get(fileurl).content)
+                    file_name = '%s_%s' % (file_['datetime'], fileurl.split('/')[-1])
+                    file_name = '%s/%s' % (dir_name, file_name)
+                    if not os.path.exists(file_name):
+                        with open(file_name, 'wb') as f:
+                            f.write(requests.get(fileurl).content)
 
                 communication_text = communication['communication'].encode('ascii', 'ignore')
-                date = communication['date'].split('T')[0]
+                date = communication['datetime'].split('T')[0]
                 with open('%s/%s_%s_communication.txt' % (dir_name, date, i), 'w') as f:
                     f.write(communication_text)
 
@@ -72,3 +88,7 @@ while next_ is not None: # Handling at the page level
         print r.status_code
         print r.content
         raise
+    except KeyboardInterrupt:
+        import ipdb
+        ipdb.set_trace()
+
