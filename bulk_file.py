@@ -1,13 +1,14 @@
-#!/usr/bin/env python3
+#!/usr/bin/env python2
 # -- coding: utf-8 --
 
 import requests
 import json
 import csv
 
-# Step 1: Create a file "file_with_agencies.csv" and add the agency IDs you want to file with in it, one per line. You can use 248 and 21983 as test agencies. Filing with test agencies will deduct requests from your account, but once you verify the script works as expected you can cancel the requests yourself within 30 minutes from the main interface.
+# Step 1: Create a file "file_with_agencies.csv" and add the agency IDs you want to file with in it, one per line. You can use 248 and 21983 as test agencies. You do not normally need to modify the following line. Filing with test agencies will deduct requests from your account, but if you reach out we can refund those requests or you can cancel them yourself within 30 minutes.
 
-# Step 2: Create a file "requestLanguage.txt" with the text of the request. This should be the full length of the request and include any salutations. Do not include contact information — MuckRock generates this on a per request basis.
+
+# Step 2: Create a file "requestLanguage.txt" with the text of the request. This should be the full length of the request and include any salutations. Do not include contact information — MuckRock generates this on a per request basis. Update the below with your request's title as indicated
 
 f = open("requestLanguage.txt","r")
 
@@ -21,13 +22,9 @@ token = "1234"
 
 # Be careful: Anyone with access to your API key has full access to your account!
 
-# Step 4: Adjust the title you'd like used here. It will be followed by the name of the agency after.
+# Step 4: Uncomment embargo settings ("'embargo': True") as appropriate. Using embargo is dependent on your plan type on MuckRock.
 
-title_base = "Public Records Request: "
-
-# Step 5: Uncomment embargo settings ("'embargo': True") as appropriate. Using embargo is dependent on your plan type on MuckRock.
-
-# Step 6: Execute command, python bulk_file.py
+# Step 5: Execute command, python2 bulk_file.py
 
 
 with open('file_with_agencies.csv', 'rt') as f:
@@ -53,15 +50,14 @@ for agency in agencies:
     print(agency_url)
     a = requests.get(agency_url, headers=headers)
     agency_name = a.json()['name']
-    title = title_base + agency_name
-    print(title)
+    title = agency_name + " Request" # Update this with title
     data = json.dumps({
         'agency': agency,
         'title': title,
         'full_text': message,
 #        'attachments': [attachment],
 #         'embargo': True
-#        'permanent_embargo': True
+        'permanent_embargo': True
         })
 
     # The request will be saved as a draft if you do not have any requests left
