@@ -1,7 +1,7 @@
 MuckRock API
 ============
 
-This repository presents a collection of scripts demonstrating the MuckRock API.
+This repository presents a collection of scripts demonstrating the MuckRock API. Find more information on [filing requests in bulk](https://muckrock.notion.site/Guides-and-Manuals-9852bdcb6046454f80840a3f833fd95c) on our Notion guide. 
 
 The API has a [visual interface](https://www.muckrock.com/api_v1/), but it is most powerful when accessed programmatically.
 
