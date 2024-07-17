@@ -52,7 +52,7 @@ for agency in agencies:
     agency_name = a.json()['name']
     title = agency_name + " Request" # Update this with title
     data = json.dumps({
-        'agency': agency,
+        'agency': agency[0],
         'title': title,
         'full_text': message,
 #        'attachments': [attachment],
