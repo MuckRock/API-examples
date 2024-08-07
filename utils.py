@@ -3,8 +3,9 @@
 
 import os
 import sys
-import requests
 from getpass import getpass
+
+import requests
 
 # Using this method of secret storing:
 # https://stackoverflow.com/questions/25501403/storing-the-secrets-passwords-in-a-separate-file
@@ -14,7 +15,7 @@ try:
     token = credentials.API_key
 except Exception as e:
     print (e)
-    token = getpass()
+    token = getpass("API Token: ")
     credentials_file = open("credentials.py", "w")
     credentials_file.writelines("API_key = \"" + token +"\"")
     credentials_file.close
